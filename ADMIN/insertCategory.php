@@ -1,5 +1,30 @@
 <?php
 
+require_once "dbconnect.php";
+if(!isset($_SESSION))
+{
+    session_start();
+}
+if (isset($_POST["btnAdd"])) 
+    {
+    $catName = $_POST["catName"];
+    $description = $_POST["description"];
+    try {
+        $sql = "insert into category values (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $status = $stmt -> execute([null, $catName, $description]);
+        $id =$conn ->lastInsertId();
+        if ($status) {
+        
+            $message="category with id $id has been inserted";
+            $_SESSION["message"] = $message;
+            header("Location : viewInfo.php");
+        }
+    }catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +47,21 @@
         </div>
         <div class="row">
             <div class="col-md-8 mx-auto py-5">
-                <form action="insertCategory.php" method="post" class="form">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" class="form">
                     <div class="mb-3">
                         <label for="" class="form-label">
                             Category Name
                         </label>
                         <input type="text" class="form-control" name="catName">
                     </div>
+
+                    <div class="mb-3">
+                        <label for="desc" class="form-label">
+                            <textarea name="description" id="desc" class="form-control" 
+                            placeholder="Please write description here"></textarea>
+                        </label>
+                    </div>
+
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary rounded" name="btnAdd">
                             Insert Category
