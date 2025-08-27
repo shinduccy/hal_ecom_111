@@ -4,14 +4,21 @@ if (!isset($_SESSION)) {
     session_start();
 }
 require_once "dbconnect.php";
-try {
-    $sql = "select * from category";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute();
-    $categories = $stmt->fetchAll();
-} catch (PDOException $e) {
-    echo $e->getMessage();
+
+if (isset($_GET["show"]) && $_GET["show"] == "categories") {
+    try {
+        $sql = "select * from category";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $categories = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+} else if (isset($_GET["show"]) && $_GET["show"] == "products") {
+    echo "after insert products";
 }
+
+
 
 ?>
 
@@ -35,12 +42,13 @@ try {
         <div class="row">
             <div class="col-md-2 mxp-auto py-5">
                 <div class="card">
-                    <a href="insertCategory.php" class="btn btn-outline-primary rounded-pill">Insert Category</a>
+                    <a href="insertCategory.php" class="btn btn-outline-primary rounded-pill mb-2">Insert Category</a>
+                    <a href="insertProduct.php" class="btn btn-outine-primary rounded-pill mb-2">Insert Prouct</a>
                 </div>
             </div>
             <div class="col-md-10 mx-auto py-5">
                 <?php
-                if(isset($_SESSION["message"])) {
+                if (isset($_SESSION["message"])) {
                     echo "<p class='alert alert-success'>$_SESSION[message]</p>";
                 }
                 ?>

@@ -18,7 +18,7 @@ if (isset($_POST["btnAdd"]))
         
             $message="category with id $id has been inserted";
             $_SESSION["message"] = $message;
-            header("Location : viewInfo.php");
+            header("Location : viewInfo.php?show=categories");
         }
     }catch (PDOException $e) {
         echo $e->getMessage();
